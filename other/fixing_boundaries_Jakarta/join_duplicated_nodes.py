@@ -19,20 +19,21 @@ unique_nodes_by_ids = {}
 # Put all nodes in a dictionary and create a non duplicate nodes list to use later while looping the ways
 for n in r.findall('node'):
         node_id = n.attrib['id']
-	lon_lat = n.attrib['lon'] + "," + n.attrib['lat']
+	lat_lon = n.attrib['lat'] + "," + n.attrib['lon']
 	
 	    
-	if not unique_nodes_bycoords.has_key(lon_lat): 
-	    unique_nodes_bycoords[lon_lat] = node_id
-	    unique_nodes_by_ids[node_id] = (n.attrib['lon'], n.attrib['lat'])
+	if not unique_nodes_bycoords.has_key(lat_lon): 
+	    unique_nodes_bycoords[lat_lon] = node_id
+	    unique_nodes_by_ids[node_id] = (n.attrib['lat'], n.attrib['lon'])
 	    nodes_to_uniquenodes_by_ids[node_id] = node_id
 	else:
-	    unique_node_id = unique_nodes_bycoords[lon_lat]
+	    unique_node_id = unique_nodes_bycoords[lat_lon]
 	    nodes_to_uniquenodes_by_ids[node_id] = unique_node_id
+            print node_id, "lat="+ n.attrib['lat'] + " lon=" + n.attrib['lon'] #to display which ones are the duplicate nods
 	    
 print 'Total Nodes:',len(nodes_to_uniquenodes_by_ids)
 print 'Total Unique nodes:',len(unique_nodes_bycoords)
-#print lon_lat, unique_nodes_bycoords.has_key(lon_lat)
+#print lat_lon, unique_nodes_bycoords.has_key(lat_lon)
 
 #Looping the ways and its node members and replacing the id of the nodes with the unique node ids
 for way in r.findall("way"):
@@ -41,6 +42,7 @@ for way in r.findall("way"):
 	    if c.tag == "nd":
                 node_id = c.attrib['ref']
                 if nodes_to_uniquenodes_by_ids.has_key(node_id):
+
 		    unique_node_id = nodes_to_uniquenodes_by_ids[node_id]
 		    c.attrib['ref'] = unique_node_id
                 
