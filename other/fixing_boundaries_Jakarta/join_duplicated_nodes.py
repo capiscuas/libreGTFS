@@ -1,7 +1,7 @@
 import xml.etree.cElementTree as ET
 
 input_filename = "original.osm"
-output_filename = "final.osm"
+output_filename = "unique_nodes.osm"
 
 # Parse the XML from the OSM file
 tree = ET.ElementTree(file=input_filename)
@@ -52,7 +52,7 @@ for i in r.findall("node"):
 
 print 'Adding no duplicated nodes to the XML tree'
 for node_id,coords in unique_nodes_by_ids.items():
-  xml_node = ET.Element('node',{'id':node_id, 'visible':'true','lat':coords[1] ,'lon':coords[0]})
+  xml_node = ET.Element('node',{'id':node_id, 'visible':'true','lat':coords[0] ,'lon':coords[1]})
   #Optionaly you can add the following line to visualize in JOSM the id of the node as the name, for debugging purposes.
   #xml_node.append(ET.Element('tag',{'k':'name','v':node_id}))
   r.append(xml_node)

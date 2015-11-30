@@ -1,11 +1,17 @@
 import xml.etree.cElementTree as ET
 
 
-input_filename = "original.osm"
-output_filename = "final.osm"
+input_filename = "unique_nodes.osm"
+output_filename = "ready_to_fix.osm"
 
 # Parse the XML from the OSM file
 tree = ET.ElementTree(file=input_filename)
+
+#I tried to use the library OSMAPI to parse the OSM files into python structures
+# but it hanged the laptop cause it took too much time
+#from osmapi import OsmApi
+#MyApi = OsmApi(username = u"xxxxxxx", password = u"*******")
+#result = MyApi.ParseOsm(file(input_filename).read())
 
 # Get the root of the XML (the <osm> node)
 r = tree.getroot()
