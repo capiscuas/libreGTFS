@@ -190,7 +190,7 @@ for idx,way in all_ways.items():
                     
                 try:
                         level8_name = int(level8) #This would remove the zeros in case of string number 00X = X
-                        formatted_level8_name = 'RW '+str(level8_name)
+                        formatted_level8_name = 'RW '+str(level8_name).zfill(2)
                 except:
                         level8_name = level8
                         formatted_level8_name = level8
@@ -204,7 +204,7 @@ for idx,way in all_ways.items():
                 if admin_level == 9:
                     try:
                             level9_name = int(level9) #This would remove the zeros in case of string number 00X = X
-                            formatted_level9_name = 'RT '+str(level9_name)
+                            formatted_level9_name = 'RT '+str(level9_name).zfill(2)
                     except:
                             level9_name = level9
                             formatted_level9_name = level9
@@ -351,6 +351,7 @@ for indexes, nodes in splitted_ways_idx.items():
   way_ref = indexes[1:indexes.find(',')] +  indexes[indexes.find(',')+2:] #we remove the , comma
   #print int(way_ref)
   xml_way = ET.Element('way',{'id':'-'+way_ref, 'visible':'true'})
+  xml_way.append(ET.Element('tag',{'k':'boundary','v':'administrative'}))
   
   if splitted_ways_idx_ocurrences.has_key(indexes):
       total_occurrences = splitted_ways_idx_ocurrences[indexes]
@@ -385,7 +386,7 @@ for name_level7_level8_level9, relation in relations_level7_level8_level9.items(
   xml.append(ET.Element('tag',{'k':'boundary','v':'administrative'}))
   xml.append(ET.Element('tag',{'k':'admin_level','v':'9'}))
   xml.append(ET.Element('tag',{'k':'type','v':'boundary'}))
-  xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
+  #xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
   
   for indexes in relation['ways_idx']:
       way_ref = indexes[1:indexes.find(',')] +  indexes[indexes.find(',')+2:] #we remove the , comma
@@ -412,7 +413,7 @@ for name_level7_level8, relation in relations_level7_level8.items():
   xml.append(ET.Element('tag',{'k':'boundary','v':'administrative'}))
   xml.append(ET.Element('tag',{'k':'admin_level','v':'8'}))
   xml.append(ET.Element('tag',{'k':'type','v':'boundary'}))
-  xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
+  #xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
   
   if names_level7_level8.has_key(name_level7_level8):
       formatted_level8_name = names_level7_level8[name_level7_level8]
@@ -436,7 +437,7 @@ for name_level7, ways_idx in relations_level7.items():
   xml.append(ET.Element('tag',{'k':'boundary','v':'administrative'}))
   xml.append(ET.Element('tag',{'k':'admin_level','v':'7'}))
   xml.append(ET.Element('tag',{'k':'type','v':'boundary'}))
-  xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
+  #xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
   
   for indexes in ways_idx:
       way_ref = indexes[1:indexes.find(',')] +  indexes[indexes.find(',')+2:] #we remove the , comma
@@ -455,7 +456,7 @@ for name_level6, ways_idx in relations_level6.items():
   xml.append(ET.Element('tag',{'k':'boundary','v':'administrative'}))
   xml.append(ET.Element('tag',{'k':'admin_level','v':'6'}))
   xml.append(ET.Element('tag',{'k':'type','v':'boundary'}))
-  xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
+  #xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
 
   for indexes in ways_idx:
       way_ref = indexes[1:indexes.find(',')] +  indexes[indexes.find(',')+2:] #we remove the , comma
@@ -471,9 +472,8 @@ for name_level5, ways_idx in relations_level5.items():
   xml.append(ET.Element('tag',{'k':'name','v':name_level5.title()}))
   xml.append(ET.Element('tag',{'k':'boundary','v':'administrative'}))
   xml.append(ET.Element('tag',{'k':'admin_level','v':'5'}))
-  xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
   xml.append(ET.Element('tag',{'k':'type','v':'boundary'}))
-  xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
+  #xml.append(ET.Element('tag',{'k':'natural','v':'water'}))
   #Obsolete, boundary relation subareas are deprecated according the OSM Wiki
   #if members_level5.has_key(name_level5):
       #print 'Members of ',name_level5
