@@ -12,6 +12,7 @@ input_filename = sys.argv[1]
 output_filename = sys.argv[2]
 
 ascii_to_lao = {}
+ascii_to_lao[' '] = u' '
 ascii_to_lao['|'] = u'\u0EDC' # ໜ     
 ascii_to_lao[';'] = u'\u0EA7' # ວ  ;q ວົ  ;y ວີ  
 ascii_to_lao['-'] = u'\u0E8A' # ຊ 
@@ -67,10 +68,22 @@ ascii_to_lao['Y'] = u'\u0EB4\u0EC9' #ຜິ້
 ascii_to_lao['P'] = u'\u0EBD' #ຽ
 ascii_to_lao['I'] = u'\u0EAE' #ຮ
 ascii_to_lao['E'] = u'\u0EB3\u0EC9' #oE ນ້ຳ
-ascii_to_lao['='] = u'\u0ECD'
+ascii_to_lao['U'] = u'\u0EB4\u0EC9'  #ງເຜິ້ງ
+ascii_to_lao['='] = u'\u0ECD' 
  
+#numbers
+ 
+ascii_to_lao['W'] = u'\u0ED0'  #0
+ascii_to_lao['!'] = u'\u0ED1'  #1 
+ascii_to_lao['@'] = u'\u0ED2'  #2 
+ascii_to_lao['#'] = u'\u0ED3'  #3 
+ascii_to_lao['$'] = u'\u0ED4'  #4
+ascii_to_lao['&'] = u'\u0ED5'  #5 
+ascii_to_lao['*'] = u'\u0ED6'  #6 
 
-
+ascii_to_lao['('] = u'\u0ED7'  #7
+ascii_to_lao[')'] = u'\u0ED8'  #8
+#ascii_to_lao[''] = u'\u0ED9'  #9
 # Parse the XML from the OSM file
 tree = ET.ElementTree(file=input_filename)
 
@@ -78,17 +91,23 @@ tree = ET.ElementTree(file=input_filename)
 r = tree.getroot()
 
 #Converting the Ways Tree XML elements into a python dictionary
-count = 1
-for way in r.findall("way"):
-    count += 1
+count = 0
+for way in r.findall("node"): #or it could be way
+    
     for c in way.getchildren():
                 way_id = way.attrib['id']
                 name_laos = ''
                 missing = False
+                
                 if c.attrib.has_key('k') and c.attrib['k'] == 'DNAMELAO':
                     name_laos = c.attrib['v'].replace('&apos;','\'')
                 elif c.attrib.has_key('k') and c.attrib['k'] == 'LAO_NAME':
                     name_laos = c.attrib['v'].replace('&apos;','\'')
+                elif c.attrib.has_key('k') and c.attrib['k'] == 'VNAMELAO1':
+                    name_laos = c.attrib['v'].replace('&apos;','\'')
+                elif c.attrib.has_key('k') and c.attrib['k'] == 'VNAMEENG':
+                    name_eng = c.attrib['v'].title()
+                    c.attrib['v'] = name_eng
                 
                 if name_laos:    
                     converted_name = ''
@@ -97,16 +116,24 @@ for way in r.findall("way"):
                             converted_name += ascii_to_lao[l]
                         else:
                             print 'Not found ',l, way_id
+                            converted_name += l
+                            
                             missing = True
-                            continue
+                            #continue
                             for c in way.getchildren():
                                 if c.attrib.has_key('k') and c.attrib['k'] == 'ENGLISH_NA':
+                                    name_eng = c.attrib['v']
+                                elif c.attrib.has_key('k') and c.attrib['k'] == 'VNAMEENG':
+                                    name_eng = c.attrib['v']
+                                    print name_eng
                                     print name_laos
-                                    print c.attrib['v']
+                                
 
-                    print converted_name
+                    if missing:
+                        count += 1
+                        print converted_name
                     c.attrib['v'] = converted_name
                  
-
+print 'Total notfound', count
 print 'Saving'
 tree.write(output_filename, encoding='utf-8', xml_declaration=True) 
